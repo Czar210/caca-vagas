@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+# dados pessoais nunca entram aqui: eles moram na pasta de cada pessoa
+vagas.json
+painel.html
+perfil.md
+!modelos/perfil.md
+curriculos/

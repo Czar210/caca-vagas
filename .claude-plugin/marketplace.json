@@ -1,0 +1,15 @@
+{
+  "name": "caca-vagas",
+  "description": "Plugin do Claude Code para procurar vaga e adaptar currículo.",
+  "owner": {
+    "name": "César Sibila",
+    "url": "https://github.com/Czar210"
+  },
+  "plugins": [
+    {
+      "name": "caca-vagas",
+      "source": ".",
+      "description": "Pesquisa vagas que batem com o seu perfil, mostra num painel HTML local e adapta o currículo para cada vaga."
+    }
+  ]
+}
