@@ -61,8 +61,9 @@ regime, modalidade e datas. Se voltar `incerta` com HTTP 403, use WebFetch na UR
 Com o texto em mãos, preencha:
 
 - `aderencia`: `alta`, `media_alta`, `media`, `media_baixa` ou `baixa`, comparando o que
-  a vaga pede com a stack forte, o nível e as notas do perfil. Se existir
-  `<pasta>/candidato/contexto/habilidades.md`, use também.
+  a vaga pede com a stack forte, o nível e as notas do perfil. Leia também
+  `<pasta>/candidato/contexto/habilidades.md` e as experiências de `candidato/` se
+  existirem: elas valem mais que o perfil resumido.
 - `motivo`: uma frase com o que bate. `falta`: o que a vaga exige e a pessoa não tem.
   Seja honesto: requisito obrigatório que falta pesa mais que diferencial.
 - `salario`, `salario_tipo`, `salario_fonte`: se a vaga informa, copie e use
@@ -75,6 +76,23 @@ Com o texto em mãos, preencha:
 
 Descarte vaga abaixo do piso quando o salário for informado. Quando for estimativa
 e estiver perto do piso, mantenha e diga isso em `falta`.
+
+Toda vaga que entra leva três comentários seus, de uma a três frases cada (até uns 350
+caracteres), ancorados no texto da vaga e no `candidato/` da pessoa:
+
+- `comentario_vaga`: o que o cargo é por trás do título. Título júnior com requisito
+  sênior, "engenheiro de IA" que é Copilot Studio, consultoria que aloca em cliente,
+  anúncio repetido, prazo curto. Sinais bons e ruins.
+- `comentario_voce`: a pessoa diante desta vaga. O que no histórico dela pesa a favor
+  (cite o projeto ou número real de `candidato/`) e a lacuna que vão perguntar na entrevista.
+- `comentario_encaixe`: os dois juntos. Vale aplicar ou não e por quê, o que destacar no
+  currículo, uma pergunta para fazer ao recrutador.
+
+Esses comentários são assumidamente a sua voz, separados do que é da pessoa. Mesmo
+assim, respeite o "Nunca" de `candidato/voz.md` (se existir) e: sem travessão, sem
+negrito, sem a fórmula "não é X, é Y", sem três adjetivos em fila. Seja direto como um
+colega sênior, inclusive quando a resposta é "não vale a pena". Se o perfil marca algo
+como em aberto (uma direção de carreira, por exemplo), não trate como decidido.
 
 ## 6. Gravar e mostrar
 

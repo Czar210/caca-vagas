@@ -1,6 +1,6 @@
 {
   "name": "caca-vagas",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Pesquisa vagas que batem com o seu perfil, mostra num painel HTML local e adapta o currículo para cada vaga.",
   "author": { "name": "César Sibila", "url": "https://github.com/Czar210" },
   "homepage": "https://github.com/Czar210/caca-vagas",

@@ -18,4 +18,7 @@ Vieram de lá as ideias centrais:
 
 O texto aqui foi reescrito em português e adaptado ao formato de plugin do Claude Code
 (skills no lugar de Makefile e prompts), e ganhou a ligação com as vagas do painel.
+A virada para a voz da pessoa (frases dela, entrevista, tabela de rastro) veio de uma crítica
+do André ao harness: ele embelezava demais e virava "cola a vaga num LLM".
+
 O que estiver bom vem de lá; o que estiver errado é daqui.

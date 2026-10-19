@@ -1,115 +1,103 @@
 ---
 name: adaptar-curriculo
-description: Gera um currículo sob medida para uma vaga, pensado para passar em filtro de ATS, a partir do contexto do candidato, e exporta em PDF. Use quando a pessoa disser "adapta meu currículo pra vaga <id>", "faz um currículo pra essa vaga" (com link ou descrição colada), ou pedir carta de apresentação, resposta de "por que você quer essa vaga" ou texto de LinkedIn para uma vaga.
+description: Monta um currículo para uma vaga específica escolhendo, cortando e reordenando as frases que a própria pessoa escreveu, com rastro de cada mudança, e exporta em PDF. Use quando a pessoa disser "adapta meu currículo pra vaga <id>", "faz um currículo pra essa vaga" (com link ou descrição colada), ou pedir carta de apresentação ou resposta de entrevista para uma vaga.
 argument-hint: "<id da vaga, link ou descrição colada>"
-allowed-tools: Bash(python ${CLAUDE_PLUGIN_ROOT}/scripts/caca.py *), Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/caca.py *), WebFetch, Read, Write, Edit, Glob
+allowed-tools: Bash(python ${CLAUDE_PLUGIN_ROOT}/scripts/caca.py *), Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/caca.py *), WebFetch, Read, Write, Edit, Glob, AskUserQuestion
 ---
 
 # Adaptar currículo para uma vaga
 
-Método adaptado do [adapt-resume-harness](https://github.com/devdebdeb/adapt-resume-harness),
-de devdebdeb. `CACA` = `python ${CLAUDE_PLUGIN_ROOT}/scripts/caca.py` (ou `python3`).
+Leitura da vaga e checklist de ATS adaptados do
+[adapt-resume-harness](https://github.com/devdebdeb/adapt-resume-harness), de devdebdeb.
+`CACA` = `python ${CLAUDE_PLUGIN_ROOT}/scripts/caca.py` (ou `python3`).
 
-## 0. Pegar a vaga e o contexto
+**Você é editor, não autor.** O material são as frases da pessoa em
+`candidato/**/README.md` (seções "Nas minhas palavras") e em `candidato/voz.md`. Seu
+trabalho é escolher quais entram para esta vaga, em que ordem, e cortar o que não serve.
+Um currículo que soa como "LLM personalizou o meu currículo" é falha deste skill.
 
-- Se veio um id: `CACA listar --todas` para achar a vaga e `CACA detalhe <url>` para o
-  texto inteiro (se voltar 403, WebFetch). Se veio link, `CACA detalhe <link>`. Se veio
-  texto colado, use o texto.
-- Leia `<pasta>/perfil.md` (contato e quem é a pessoa) e tudo de `<pasta>/candidato/contexto/`
-  e `<pasta>/candidato/formacao/`. Se `contexto/habilidades.md` estiver vazio, pare e
-  proponha a skill montar-perfil primeiro: currículo sem contexto vira invenção.
+## 0. Material
+
+- Vaga: id → `CACA listar --todas` e `CACA detalhe <url>` (403 → WebFetch); link →
+  `CACA detalhe <link>`; texto colado → o texto.
+- Pessoa: `<pasta>/perfil.md` (contato), `candidato/voz.md` inteiro, e tudo de
+  `candidato/experiencias/`, `projetos/`, `formacao/`, `certificacoes/`, `contexto/`.
+- Se uma experiência relevante para a vaga não tem "Nas minhas palavras", pare e ofereça
+  a entrevista da skill montar-perfil para ela. Não preencha com texto seu.
 
 ## 1. Ler a vaga
 
-Monte, para você e para mostrar à pessoa em forma curta:
+Mostre curto: requisitos obrigatórios, desejáveis e diferenciais; palavras chave literais
+que um ATS vai procurar; nível real (o título e o requisito às vezes discordam: diga).
 
-- requisitos técnicos marcados como obrigatório, desejável ou diferencial;
-- comportamentais esperados;
-- palavras-chave literais que um ATS vai procurar (como estão escritas na vaga);
-- nível esperado, setor, tamanho da empresa e o problema que o cargo resolve.
+## 2. Comparar
 
-## 2. Comparar com o candidato
+Tabela: requisito, tem? (`documentada`, `inferida` ou lacuna), onde. Nota de 0 a 10 com
+uma frase. Lacuna vizinha que a vaga marca como obrigatória ou desejável: pergunte se a
+pessoa tem. Nada entra sem sim explícito.
 
-Tabela: requisito, tem? (`documentada`, `inferida` ou lacuna), onde está no contexto.
-Termine com uma nota de 0 a 10 e uma frase de justificativa. Para cada lacuna, diga se
-é vizinha do que a pessoa já sabe (aprende rápido) ou distante.
+Equivalente direto (pede AWS, tem Azure): o nome pedido pode aparecer só como
+"transferível para AWS" numa linha de competências, nunca como habilidade afirmada.
 
-Lacuna vizinha que aparece como obrigatória ou desejável: pergunte à pessoa se ela
-tem, ou se tem contato suficiente pra citar. Passar no ATS importa, então na dúvida
-pergunte em vez de omitir em silêncio. Nada entra sem um sim explícito.
+## 3. Montar, com rastro
 
-Equivalente direto: se a vaga pede uma ferramenta e a pessoa tem a equivalente (pede
-AWS, tem Azure), o nome pedido pode aparecer no texto do currículo como
-"transferível para AWS" para o ATS achar a palavra. Isso não é afirmar a habilidade e
-nunca vai para `habilidades.md`.
+Para cada seção (resumo, experiência, projetos, formação, certificações), selecione as
+frases da pessoa que mais servem à vaga e ordene pela relevância. Edições permitidas,
+nesta ordem de preferência:
 
-## 3. Escrever
+1. **Manter** a frase como está.
+2. **Cortar** trecho (oração, lista longa) que não serve a esta vaga.
+3. **Trocar um termo** pelo da vaga só quando é sinônimo exato do mesmo fato
+   (ex.: "carga diária" → "pipeline batch diário" se a vaga usa esse termo). Nunca para
+   inflar ("participei" não vira "liderei").
+4. **Juntar** duas frases da pessoa numa, se couber sem acrescentar ideia.
 
-Idioma: o da vaga (português do Brasil ou inglês dos EUA). Escolha o que mais serve a
-esta vaga, não sempre o mesmo: três a cinco projetos, as experiências relevantes, três a
-cinco disciplinas da formação que conversam com a vaga, TCC ou iniciação científica se
-somarem. Grave em Markdown simples, que o PDF entende:
+Proibido: acrescentar adjetivo, resultado, número, escopo ou palavra que a pessoa não
+usou; e qualquer coisa listada em "Nunca" no `voz.md`. O resumo do topo também sai das
+frases dela (o perfil do currículo, a fala da entrevista); se não houver, monte com
+frases dela e marque como rascunho.
+
+Antes de salvar, mostre a tabela de rastro e peça aprovação:
+
+| # | Seção | Frase original (fonte) | Nesta versão | Edição |
+|---|---|---|---|---|
+| 1 | Experiência | "..." (experiencias/x/README.md) | "..." | manteve / cortou "..." / trocou "a" por "b" |
+
+Se a pessoa reescrever alguma linha, use a versão dela e ofereça guardar em "Nas minhas
+palavras". Se ela corrigir forma, acrescente a regra em "Nunca" do `voz.md`.
+
+Bullets: confira, não reescreva. Se um bullet relevante não tem número nem resultado,
+pergunte "tem um número pra isso?" em vez de inventar.
+
+## 4. Formato e conferência
+
+Markdown simples, que o PDF entende:
 
     # Nome Completo
     Título igual ao da vaga
-    Cidade · telefone · e-mail · [LinkedIn](url) · [GitHub](url) · idiomas
+    Cidade · telefone · email · [LinkedIn](url) · [GitHub](url) · idiomas
 
     ## Resumo
-    Três ou quatro linhas com o título da vaga e as palavras-chave dela.
-
     ## Competências
-    Três a cinco grupos nomeados como a vaga nomeia, cada um uma lista separada por vírgula.
-
     ## Experiência
     ### Cargo · Empresa · período
-    - bullet XYZ, o mais ligado à vaga primeiro
-
+    - frase da pessoa
     ## Projetos
-    ### Projeto · link
-    - bullet XYZ
-    - Stack: ...
-
     ## Formação
-    ### Curso · Instituição · período
-    Disciplinas: ...
-
     ## Certificações
-    - Nome · emissor · ano
 
-Bullets XYZ: resultado, número, como; uma linha, no máximo duas, começando pelo
-resultado. Se um cargo tem quatro fatos ou mais, fique com os dois números mais fortes.
-Bullet sem número: busque na fonte ou marque `[falta número]` e avise.
-
-Nunca coloque CR, nota ou média. Nada de foto, endereço completo ou documento. Datas
-no mesmo formato do começo ao fim. Verbo no passado para cargos que acabaram. Tamanho:
-até 2 páginas em inglês, até 3 em português (uma é melhor para júnior).
-
-### Texto corrido sem cara de IA
-
-Vale para resumo, carta e qualquer prosa (bullets seguem o XYZ). Cada afirmação de
-encaixe aponta para um projeto, número ou habilidade do contexto. Varie o tamanho das
-frases. Escreva como alguém contando trabalho real para outro profissional.
-Não use: alavancar, desbloquear, robusto sem número, sinergia, holístico, de ponta,
-"no cenário atual", "vale ressaltar", "nesse sentido", elogio genérico à empresa,
-abertura de enchimento, fecho aspiracional, travessão, e a estrutura em três batidas
-("Não é só X. É Y. É Z."). Em inglês, o mesmo: leverage, unlock, seamless,
-cutting-edge, game-changer, world-class, synergy, "in today's landscape".
-
-## 4. Conferir antes de salvar
-
-- Toda palavra-chave obrigatória aparece literalmente.
-- O título da vaga aparece no resumo.
-- A formação pedida aparece como a vaga escreve.
-- Nada de tabela ou colunas no corpo (quebra o ATS).
-- O mais relevante vem primeiro em cada seção.
+Confira: palavras chave obrigatórias aparecem literalmente (se faltar uma que a pessoa
+tem, a frase dela que prova vai para cima; se ela não tem, a palavra não entra); título
+da vaga no resumo; sem tabela ou coluna no corpo; sem nota, CR, foto, endereço
+completo, documento; datas no mesmo formato; até 1 página para júnior, 2 em inglês,
+3 em português.
 
 ## 5. Salvar e ligar à vaga
 
-Grave em `<pasta>/curriculos/<empresa_em_snake_case>/<nome-em-kebab>-<cargo-em-kebab>.md`.
-Rode `CACA pdf <arquivo.md>` (gera o PDF com Chrome ou Edge e diz quantas páginas deu;
-se passar do limite, corte e gere de novo). Se veio de uma vaga guardada, rode
-`CACA editar <id> curriculo=curriculos/<empresa>/<arquivo>.pdf` e `CACA painel`: o
-card da vaga ganha o botão do currículo.
+Grave em `<pasta>/curriculos/<empresa_snake>/<nome-kebab>-<cargo-kebab>.md`, junto com
+`<mesmo-nome>.rastro.md` (a tabela aprovada). `CACA pdf <arquivo.md>` gera o PDF e diz
+quantas páginas deu. Se veio de vaga guardada: `CACA editar <id> curriculo=<caminho do
+pdf relativo à pasta>` e `CACA painel`.
 
-Responda com a nota de aderência, as perguntas de lacuna que ficaram, o caminho do PDF
-e a oferta de gerar a versão no outro idioma, uma carta ou o texto do LinkedIn.
+Carta, "por que esta vaga" ou resposta de entrevista: mesmo princípio. Comece pedindo
+duas ou três frases dela sobre por que quer a vaga; você organiza e corta.

@@ -4,6 +4,13 @@
 
 MM/AAAA a MM/AAAA
 
+## Nas minhas palavras
+
+Como você contaria isso para alguém da área, com as suas palavras. Uma citação por bloco.
+É daqui que o Claude tira as frases do currículo, sem reescrever.
+
+> 
+
 ## Por que existiu
 
 Qual era a necessidade do negócio.

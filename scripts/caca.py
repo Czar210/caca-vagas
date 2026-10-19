@@ -39,7 +39,7 @@ CAMPOS = [
     "url", "empresa", "cargo", "area", "nivel", "modalidade", "local", "regime",
     "salario", "salario_tipo", "salario_fonte", "beneficios", "aderencia", "motivo",
     "falta", "publicada", "prazo", "fonte", "situacao", "conferida_em", "status",
-    "notas", "curriculo",
+    "notas", "curriculo", "comentario_vaga", "comentario_voce", "comentario_encaixe",
 ]
 
 GUPY_TIPO = {
@@ -380,6 +380,13 @@ def cmd_init(args):
     cand = p / "candidato"
     if not cand.exists():
         shutil.copytree(MODELOS / "candidato", cand)
+    else:  # pasta de versão antiga: completa o que faltar, sem sobrescrever nada
+        for origem in (MODELOS / "candidato").rglob("*"):
+            destino = cand / origem.relative_to(MODELOS / "candidato")
+            if origem.is_dir():
+                destino.mkdir(parents=True, exist_ok=True)
+            elif not destino.exists():
+                shutil.copy(origem, destino)
     (p / "curriculos").mkdir(exist_ok=True)
     PONTEIRO.write_text(json.dumps({"pasta": str(p)}, ensure_ascii=False), encoding="utf-8")
     print(f"Pasta pronta: {p}")

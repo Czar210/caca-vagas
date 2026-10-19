@@ -2,6 +2,13 @@
 
 Uma linha dizendo o que ele faz.
 
+## Nas minhas palavras
+
+Como você contaria isso para alguém da área, com as suas palavras. Uma citação por bloco.
+É daqui que o Claude tira as frases do currículo, sem reescrever.
+
+> 
+
 ## Problema
 
 Que problema resolve, e pra quem.
